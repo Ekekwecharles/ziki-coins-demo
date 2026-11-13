@@ -444,6 +444,10 @@ export function AppHeader({
                 <MenuLink href={MANAGE_AGENTS_HREF} active={Boolean(pathname?.startsWith(MANAGE_AGENTS_HREF))}>
                   Manage agents
                 </MenuLink>
+                {/* Ziki Coins (#ziki-coins): buy Ziks, fund issues, set up payouts and withdraw. */}
+                <MenuLink href="/coins" active={isNavItemActive(pathname, "/coins")}>
+                  Ziks
+                </MenuLink>
                 <MenuLink href="/settings" active={isNavItemActive(pathname, "/settings")}>
                   Settings
                 </MenuLink>

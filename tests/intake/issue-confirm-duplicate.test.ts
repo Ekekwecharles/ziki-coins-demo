@@ -45,6 +45,8 @@ const db = vi.hoisted(() => ({
   issueClaim: { findMany: vi.fn(async () => []), updateMany: vi.fn() },
   supportThread: { findMany: vi.fn(async () => []), updateMany: vi.fn() },
   notification: { createMany: vi.fn() },
+  // Closing refunds the issue's escrow; these issues were never funded.
+  coinEntry: { aggregate: vi.fn(async () => ({ _sum: { amount: 0 } })) },
   $queryRaw: vi.fn(),
   $transaction: vi.fn(),
 }));

@@ -70,8 +70,8 @@ function WithdrawBar({ earned: raw, checking: rawChecking }: { earned: number; c
 /**
  * Withdraw (#earnings, Mark's review): always a window in the middle of the page you are on, never a trip to another
  * page, the way Earn showed it. It shows the threshold and what you earned in the workspace you're in against it on
- * the withdraw bar (not your total across workspaces), with a link to Your earnings for that workspace. Payouts aren't built yet: at $30 or more it says the money is ready and that taking it out is
- * coming.
+ * the withdraw bar (not your total across workspaces), with a link to Your earnings for that workspace. At $30 or more it says the money is ready and sends you to the Ziks
+ * page (/coins), where payouts are set up and the withdrawal is made.
  */
 export function WithdrawWindow({ earned, organisationId, className, children }: { earned: number; organisationId: string | null; className: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -133,7 +133,7 @@ export function WithdrawWindow({ earned, organisationId, className, children }: 
             </button>
           </div>
           <p className="mt-1 text-sm text-zk-text2">
-            {ready ? "Your money is ready. We’re still working out how payouts will work, and we’ll tell you as soon as you can take it out." : `You have ${money(available)}. ${money(left)} to go.`}
+            {ready ? "Your money is ready. Set up payouts on your Ziks page, then withdraw it to your Stripe account." : `You have ${money(available)}. ${money(left)} to go.`}
           </p>
 
           <p className="mt-5 flex flex-wrap items-baseline gap-x-2">
@@ -148,7 +148,7 @@ export function WithdrawWindow({ earned, organisationId, className, children }: 
           <div className="mt-6 grid grid-cols-2 gap-2 sm:flex sm:justify-end">
             <Link href={details?.workspaceSlug ? `/earnings?in=${encodeURIComponent(details.workspaceSlug)}` : "/earnings"} onClick={() => setOpen(false)} className={SECONDARY}>See my earnings</Link>
             {ready ? (
-              <Link href="/settings?section=finance" onClick={() => setOpen(false)} className={PRIMARY}>Add your wallet</Link>
+              <Link href="/coins" onClick={() => setOpen(false)} className={PRIMARY}>Withdraw</Link>
             ) : (
               <Link href="/discover?open=true" onClick={() => setOpen(false)} className={PRIMARY}>Find more tasks</Link>
             )}

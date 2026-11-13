@@ -31,6 +31,9 @@ function fakeDb(multipliers: Record<string, number | string>, reporters: string[
       update: vi.fn(async ({ data }: { data: Record<string, unknown> }) => Object.assign(bug, data)),
     },
     deploymentReport: { findMany: vi.fn(async () => reporters.map((onBehalfOfUserId) => ({ onBehalfOfUserId }))) },
+    // An issue nobody funded: its escrow is empty, so releasing the payout moves no Ziks.
+    coinEntry: { aggregate: vi.fn(async () => ({ _sum: { amount: 0 } })) },
+    $queryRaw: vi.fn(async () => []),
   };
   return { db: db as never, rows };
 }

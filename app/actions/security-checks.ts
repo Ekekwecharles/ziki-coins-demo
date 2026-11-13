@@ -16,7 +16,7 @@ const NO_WORKSPACE = "Join or create a workspace to check a site.";
 
 /**
  * Unlock fixes (plan C1): every locked finding on the check, or the ones
- * chosen. Simulated payment: it only sets `unlockedAt`. Then back to Your
+ * chosen, paid in Ziks (lib/security-checks/payment.ts). Then back to Your
  * sites, with a short note.
  */
 export async function unlockSecurityFindings(checkId: string, which: "all" | string[]): Promise<{ error?: string }> {
@@ -30,6 +30,9 @@ export async function unlockSecurityFindings(checkId: string, which: "all" | str
   if (!outcome.ok) {
     if (outcome.reason === "not_found") return { error: "That check isn't one of yours." };
     if (outcome.reason === "not_posted") return { error: "The report isn't ready yet. You can unlock fixes once it's posted." };
+    if (outcome.reason === "insufficient_ziks") {
+      return { error: `That costs ${outcome.needed} Ziks and you have ${outcome.balance}. Buy more Ziks, then unlock again.` };
+    }
     return { error: "Those findings are already unlocked." };
   }
   revalidatePath("/security");

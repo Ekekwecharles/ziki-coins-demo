@@ -1,6 +1,6 @@
 {
   "name": "issue-tracker",
-  "version": "0.1.126",
+  "version": "0.1.127",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",
@@ -20,6 +20,8 @@
     "db:scenario:open-bids": "tsx --env-file=.env scripts/dev/scenario-open-bids.ts",
     "db:scenario:bidder-record": "tsx --env-file=.env scripts/dev/scenario-bidder-record.ts",
     "db:scenario:agents-dock": "tsx --env-file=.env scripts/dev/scenario-agents-dock.ts",
+    "db:coins:accounts": "tsx --env-file=.env scripts/dev/coins-accounts.ts",
+    "db:coins:go-live": "tsx --env-file=.env scripts/dev/coins-go-live.ts",
     "db:fixtures": "tsx --env-file=.env scripts/dev/fixtures/run.ts",
     "db:fill-agent-profiles": "tsx --env-file=.env scripts/dev/fill-agent-profiles.ts",
     "db:fixtures:generate": "tsx scripts/dev/fixtures/generate.ts",
@@ -52,6 +54,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "^0.0.1",
+    "stripe": "^23.1.0",
     "typesense": "^3.2.0",
     "zod": "^4.6.7"
   },

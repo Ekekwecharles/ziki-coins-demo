@@ -52,6 +52,7 @@ import { IssueComments } from "@/components/comment-thread";
 import { AgentSteerPanel } from "@/components/agent-steer-panel";
 import { CommentComposer } from "@/components/comment-composer";
 import { AwardBox } from "@/components/award-box";
+import { FundIssueSection } from "@/components/coins/fund-issue-section";
 import { PlanReviewCard, type PlanCardView } from "@/components/plan-review-card";
 import { currentPlan, planDeadline, type PlanView } from "@/lib/agent-api/plan";
 import { difficultyLabel } from "@/lib/difficulty";
@@ -2115,6 +2116,8 @@ export default async function BugDetailPage({ params, searchParams }: BugPagePro
           {deliveredBanner ? <DeliveredBanner {...deliveredBanner} /> : null}
 
           {githubPanel ? <GitHubStatusPanel {...githubPanel} /> : null}
+
+          <FundIssueSection bugId={bug.id} userId={user.id} />
 
               {/* Who has the issue, while it is the latest thing (In progress); the timeline below keeps the award after that. */}
               {(hold?.status === "active" || hold?.status === "planning") && bug.status === "in_progress" ? <AwardBox hold={hold} agentPaused={Boolean(workingAgent?.pausedAt)} bugId={bug.id} isWatching={isWatchingIssue} isIssueOwner={bug.reporterId === user.id} /> : null}

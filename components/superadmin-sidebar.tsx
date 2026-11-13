@@ -7,6 +7,7 @@ const links = [
   { href: "/superadmin/users", label: "Users" },
   { href: "/superadmin/orgs", label: "Organisations" },
   { href: "/superadmin/rewards", label: "Platform rewards" },
+  { href: "/superadmin/money", label: "Money" },
   { href: "/superadmin/compare", label: "Compare directory" },
   { href: "/superadmin/skill-approvals", label: "Skill Approvals" },
   { href: "/superadmin/on-call", label: "On-call agents" },

@@ -1,4 +1,5 @@
 import { closeSupportThreadsForIssue } from "@/lib/support-threads";
+import { refundEscrow } from "@/lib/coins/escrow";
 import { reopenSubstatus } from "@/lib/marketing/track";
 import { z } from "zod";
 import type { Prisma, PrismaClient, Status, Substatus } from "@prisma/client";
@@ -351,6 +352,8 @@ async function closeInTransaction(
     bugId: bug.id,
     reason: "issue_closed",
   });
+  // Ziks still in the issue's escrow go back to whoever funded it (lib/coins/escrow.ts).
+  await refundEscrow(tx, bug.id);
   await tx.bugActivity.create({
     data: {
       bugId: bug.id,

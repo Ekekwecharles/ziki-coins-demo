@@ -12,8 +12,8 @@ export type UnlockRow = { id: string; severity: SecuritySeverity; label: string;
 
 /**
  * Pick findings to unlock (#security-checks, plan C1): all of them, or the
- * ones ticked. The total follows the ticks. Paying is simulated: it only
- * unlocks the chosen findings.
+ * ones ticked. The total follows the ticks, and paying takes it from the
+ * person's Ziks.
  */
 export function UnlockFixesForm({ checkId, rows, preselected, backHref }: { checkId: string; rows: UnlockRow[]; preselected: string[]; backHref: string }) {
   const locked = rows.filter((row) => !row.unlocked);
@@ -78,7 +78,7 @@ export function UnlockFixesForm({ checkId, rows, preselected, backHref }: { chec
                 </span>
                 <span className="min-w-0 flex-1 text-[15px] text-zk-text">{row.label}</span>
                 <span className={`shrink-0 tabular-nums ${row.unlocked ? "text-sm font-semibold text-zk-ok-fg" : "text-[15px] text-zk-text"}`}>
-                  {row.unlocked ? "Unlocked" : `${row.price} ${row.price === 1 ? "coin" : "coins"}`}
+                  {row.unlocked ? "Unlocked" : `${row.price} ${row.price === 1 ? "Zik" : "Ziks"}`}
                 </span>
               </label>
             </li>
@@ -86,7 +86,7 @@ export function UnlockFixesForm({ checkId, rows, preselected, backHref }: { chec
         </ul>
         <div className="flex items-baseline justify-between border-t border-dashed border-zk-border px-5 py-4">
           <span className="font-semibold text-zk-text">Total for {chosen.length} {chosen.length === 1 ? "finding" : "findings"}</span>
-          <span className="text-xl font-bold tabular-nums text-zk-text">{chosenTotal} coins</span>
+          <span className="text-xl font-bold tabular-nums text-zk-text">{chosenTotal} Ziks</span>
         </div>
       </fieldset>
 
@@ -99,7 +99,7 @@ export function UnlockFixesForm({ checkId, rows, preselected, backHref }: { chec
           onClick={() => unlock(allPicked ? "all" : chosen.map((row) => row.id))}
           className="inline-flex h-12 w-full items-center justify-center rounded-full bg-electric-blue-strong px-6 text-[15px] font-bold text-white transition hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 disabled:opacity-50"
         >
-          {pending ? "Unlocking…" : allPicked ? `Unlock all · ${allTotal} coins` : `Unlock ${chosen.length} selected · ${chosenTotal} coins`}
+          {pending ? "Unlocking…" : allPicked ? `Unlock all · ${allTotal} Ziks` : `Unlock ${chosen.length} selected · ${chosenTotal} Ziks`}
         </button>
         <Link href={backHref} className="mx-auto text-sm text-zk-text2 underline-offset-4 hover:text-zk-text hover:underline">
           Not now

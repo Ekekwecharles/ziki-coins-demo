@@ -296,6 +296,12 @@ model User {
   /// #618: optional EVM address (0x + 40 hex) points could later be sent to.
   /// Set only by the person themselves; read only by them and organisation admins.
   walletAddress             String?
+  /// Ziki Coins (#ziki-coins): the Stripe Connect Express account Ziks are withdrawn to, and whether Stripe says it can receive transfers.
+  stripeAccountId           String?                 @unique
+  payoutsEnabled            Boolean                 @default(false)
+  coinEntries               CoinEntry[]
+  coinPurchases             CoinPurchase[]
+  withdrawals               Withdrawal[]
   /// #earnings: what the person wants to earn each week, set on Your earnings. Null: the default goal.
   weeklyEarningsGoal        Decimal?                @db.Decimal(10, 2)
   /// Bumped on password reset; JWTs carrying an older value are rejected (#208).
@@ -404,6 +410,7 @@ model IssueType {
 }
 
 model Bug {
+  coinEntries               CoinEntry[]
   featurePlanItems          FeaturePlanItem[]
   pullRequestLinkRepairs    PullRequestLinkRepair[]
   /// The private details when this issue is a security finding (#security-findings).
@@ -3500,4 +3507,97 @@ model OnCallInvite {
 
   @@index([agentId, status])
   @@index([status, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Ziki Coins (#ziki-coins). Ziks are whole coins, 1 Zik = 10 US cents.
+
+enum CoinAccount {
+  /// A person's spendable Ziks (userId).
+  wallet
+  /// The Ziks an issue's owner put behind its reward (bugId).
+  escrow
+  /// What Ziki keeps: the fee on released escrow and security check payments.
+  revenue
+}
+
+enum CoinKind {
+  purchase
+  fund_issue
+  release
+  fee
+  refund
+  withdrawal
+  withdrawal_reversal
+  check_payment
+}
+
+enum WithdrawalStatus {
+  pending
+  paid
+  failed
+}
+
+/// The Ziks ledger. Append-only like PointEntry: a row is never edited or
+/// deleted, a correction is a new row, and a balance is the sum of its rows.
+/// A move between accounts is two rows (one negative, one positive) written in
+/// one transaction; `sourceKey` is unique so the same event written twice adds
+/// one row.
+model CoinEntry {
+  id           String      @id @default(cuid())
+  account      CoinAccount
+  /// The wallet's person; null for escrow and revenue.
+  userId       String?
+  /// The escrow's issue; also set on the wallet and revenue rows of a fund, release, fee or refund.
+  bugId        String?
+  kind         CoinKind
+  /// Signed whole Ziks, never zero.
+  amount       Int
+  sourceKey    String      @unique
+  purchaseId   String?
+  withdrawalId String?
+  createdAt    DateTime    @default(now())
+  user         User?       @relation(fields: [userId], references: [id], onDelete: Restrict)
+  bug          Bug?        @relation(fields: [bugId], references: [id], onDelete: Restrict)
+
+  @@index([account, userId])
+  @@index([account, bugId])
+  @@index([kind])
+}
+
+/// One Stripe Checkout payment for a pack of Ziks, written once when Stripe says it was paid.
+model CoinPurchase {
+  id                    String   @id @default(cuid())
+  userId                String
+  stripeSessionId       String   @unique
+  stripePaymentIntentId String?
+  packId                String
+  zik                   Int
+  amountCents           Int
+  /// Stripe's processing fee on the charge, when it was read.
+  stripeFeeCents        Int?
+  currency              String   @default("usd")
+  createdAt             DateTime @default(now())
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+}
+
+/// Earned Ziks sent to a person's connected Stripe account as a Transfer.
+model Withdrawal {
+  id               String           @id @default(cuid())
+  userId           String
+  zik              Int
+  amountCents      Int
+  status           WithdrawalStatus @default(pending)
+  /// Sent to Stripe as the Transfer's idempotency key, so a retry never pays twice.
+  idempotencyKey   String           @unique
+  stripeTransferId String?          @unique
+  failureReason    String?
+  createdAt        DateTime         @default(now())
+  paidAt           DateTime?
+  user             User             @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([status])
 }

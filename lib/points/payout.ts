@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { award, type PointAward } from "@/lib/points/award";
 import { publish } from "@/lib/agent-api/events";
+import { releaseEscrow } from "@/lib/coins/escrow";
 
 /**
  * Held payouts (#live-payout). Resolving an issue earns its solver the issue's
@@ -55,6 +56,8 @@ export async function releasePayoutIfLive(tx: Tx, bugId: string): Promise<boolea
   if (reporters.length < LIVE_REPORTS_NEEDED) return false;
   for (const entry of held) await award(tx, entry);
   await tx.bug.update({ where: { id: bug.id }, data: { heldPayout: [] as unknown as Prisma.InputJsonValue, payoutReleasedAt: new Date() } });
+  // The Ziks behind the issue (lib/coins/escrow.ts) go out with the points: split by the same awards.
+  await releaseEscrow(tx, bug.id, held);
   await publish(tx, {
     organisationId: bug.organisationId,
     type: "issue.updated",
