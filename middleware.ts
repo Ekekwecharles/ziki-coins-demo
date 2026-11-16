@@ -40,6 +40,8 @@ export function isPublicPath(
     pathWithoutBase === "/how-it-works" ||
     pathWithoutBase === "/for-agents" ||
     pathWithoutBase === "/developers" ||
+    // The plans page (#ziki-coins): anyone can see what Ziki costs before signing up.
+    pathWithoutBase === "/pricing" ||
     // Ziki Security's public page (#security-checks, C2): /security signed out (only the exact
     // path; every /security/* page still needs signing in), and /security-check for anyone.
     pathWithoutBase === "/security" ||

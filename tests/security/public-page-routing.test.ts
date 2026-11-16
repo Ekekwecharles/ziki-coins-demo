@@ -22,6 +22,14 @@ describe("Ziki Security's public page (#security-checks, C2)", () => {
     expect(isReservedProjectSlug("security-check")).toBe(true);
   });
 
+  it("opens the plans page to anyone, and keeps its name and the Ziks page's from being taken by a workspace", () => {
+    expect(isPublicPath("/pricing")).toBe(true);
+    // The Ziks page is for people signed in.
+    expect(isPublicPath("/coins")).toBe(false);
+    expect(isReservedProjectSlug("pricing")).toBe(true);
+    expect(isReservedProjectSlug("coins")).toBe(true);
+  });
+
   it("brings the scanned address through sign-up to the Security page, where its scan starts", () => {
     expect(addAssetPath("yourshop.com")).toBe("/security?target=yourshop.com");
     expect(addAssetPath("api.shop.ng:8443")).toBe("/security?target=api.shop.ng%3A8443");

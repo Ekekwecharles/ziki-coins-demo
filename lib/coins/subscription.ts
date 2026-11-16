@@ -43,8 +43,15 @@ async function customerFor(userId: string, email: string | undefined): Promise<s
   return saved?.stripeCustomerId ?? customer.id;
 }
 
-/** Sends the person to Stripe Checkout to start a plan. The Ziks come from the webhook, not from this. */
-export async function createSubscriptionCheckout(userId: string, email: string | undefined, planId: string): Promise<string> {
+/** The pages a plan can be started from, so cancelling at Stripe lands back where the person was. */
+export type SubscribeFrom = "coins" | "pricing";
+
+export function subscribeFrom(value: unknown): SubscribeFrom {
+  return value === "pricing" ? "pricing" : "coins";
+}
+
+/** Sends the person to Stripe Checkout to start a plan. The discount follows once Stripe confirms the first payment. */
+export async function createSubscriptionCheckout(userId: string, email: string | undefined, planId: string, from: SubscribeFrom = "coins"): Promise<string> {
   const plan = findPlan(planId);
   if (!plan) throw new CoinError("invalid_amount", "Choose one of the plans.");
   if (await liveSubscriptionOf(userId)) {
@@ -70,7 +77,7 @@ export async function createSubscriptionCheckout(userId: string, email: string |
     subscription_data: { metadata: { userId, planId: plan.id } },
     metadata: { userId, planId: plan.id },
     success_url: absoluteUrl("/coins?subscribed=1"),
-    cancel_url: absoluteUrl("/coins"),
+    cancel_url: absoluteUrl(from === "pricing" ? "/pricing" : "/coins"),
   });
   if (!session.url) throw new CoinError("not_configured", "Stripe didn't return a checkout page.");
   return session.url;

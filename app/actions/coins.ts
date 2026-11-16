@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { CoinError } from "@/lib/coins/ledger";
 import { fundIssue } from "@/lib/coins/fund";
 import { createPackCheckout } from "@/lib/coins/purchase";
-import { createSubscriptionCheckout, setSubscriptionEnding } from "@/lib/coins/subscription";
+import { createSubscriptionCheckout, setSubscriptionEnding, subscribeFrom } from "@/lib/coins/subscription";
 import { startPayoutOnboarding, syncPayoutsEnabled, withdrawEarned } from "@/lib/coins/withdraw";
 
 /**
@@ -45,12 +45,13 @@ export async function buyZiksAction(formData: FormData): Promise<void> {
 /** Sends the person to Stripe Checkout to start a monthly Ziks plan. The Ziks come from the webhook, month by month. */
 export async function subscribeAction(formData: FormData): Promise<void> {
   const user = await requireUser();
+  const from = subscribeFrom(formData.get("from"));
   let url: string;
   try {
-    url = await createSubscriptionCheckout(user.id, user.email ?? undefined, String(formData.get("planId") ?? ""));
+    url = await createSubscriptionCheckout(user.id, user.email ?? undefined, String(formData.get("planId") ?? ""), from);
   } catch (error) {
     const message = failure(error);
-    redirect(`/coins?error=${encodeURIComponent(message.ok ? "" : message.error)}`);
+    redirect(`/${from}?error=${encodeURIComponent(message.ok ? "" : message.error)}`);
   }
   redirect(url);
 }

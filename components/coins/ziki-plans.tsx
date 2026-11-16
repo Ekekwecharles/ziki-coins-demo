@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { endSubscriptionAction, keepSubscriptionAction, subscribeAction } from "@/app/actions/coins";
 import { formatUsd } from "@/lib/coins/math";
 import { ZIK_PLANS, findPlan, planBreakEvenCents } from "@/lib/coins/plans";
@@ -67,7 +68,10 @@ export function ZikiPlans({ subscription, configured }: { subscription: PlanView
   return (
     <section aria-labelledby="plans" className={card}>
       <h2 id="plans" className={label}>Ziki plans</h2>
-      <p className="m-0 mt-2 text-sm text-zk-text2">Subscribe to pay less every time you buy Ziks. End it any time; the plan runs to the end of the month you paid for.</p>
+      <p className="m-0 mt-2 text-sm text-zk-text2">
+        Subscribe to pay less every time you buy Ziks. End it any time; the plan runs to the end of the month you paid for.{" "}
+        <Link href="/pricing" className="font-semibold text-zk-accent hover:underline">See the pricing page</Link>
+      </p>
       <ul className="m-0 mt-4 grid list-none gap-3 p-0 sm:grid-cols-3">
         {ZIK_PLANS.map((plan) => (
           <li key={plan.id} className="flex flex-col rounded-2xl border border-zk-border p-4">

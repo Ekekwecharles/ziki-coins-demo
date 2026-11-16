@@ -368,6 +368,12 @@ describe("Ziki plans (a discount on Ziks packs)", () => {
     expect(lastCheckout().line_items[0].price_data).toMatchObject({ unit_amount: 1500, recurring: { interval: "month" } });
     expect(lastCheckout().subscription_data?.metadata).toEqual({ userId: "owner", planId: "pro" });
 
+    // Started from the pricing page, cancelling at Stripe comes back to it; otherwise to the Ziks page.
+    await createSubscriptionCheckout("owner", undefined, "plus", "pricing");
+    expect((lastCheckout() as unknown as { cancel_url: string }).cancel_url).toBe("https://ziki.test/pricing");
+    await createSubscriptionCheckout("owner", undefined, "plus");
+    expect((lastCheckout() as unknown as { cancel_url: string }).cancel_url).toBe("https://ziki.test/coins");
+
     await expect(createSubscriptionCheckout("owner", undefined, "gold")).rejects.toMatchObject({ code: "invalid_amount" });
 
     live();

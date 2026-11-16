@@ -2,7 +2,7 @@
  * `pnpm db:coins:accounts` (#ziki-coins): three accounts to try Ziks with, on a database that is already
  * migrated. A workspace owner, a fixer and a super admin, in one workspace with one project and one issue the fixer
  * is working on. Additive and idempotent: it only touches its own rows (users `*@ziki-coins.test`, organisation slug
- * `coins`), never resets or reseeds, and never gives anyone Ziks; they are bought through Stripe.
+ * `coins-demo`), never resets or reseeds, and never gives anyone Ziks; they are bought through Stripe.
  *
  * Sign-in with email and password needs AUTH_PASSWORD_LOGIN=true on the deployment.
  * Override the password with COINS_ACCOUNTS_PASSWORD; the super admin's email with SUPER_ADMIN_EMAIL.
@@ -32,9 +32,9 @@ async function main() {
   }
 
   const organisation = await prisma.organisation.upsert({
-    where: { slug: "coins" },
+    where: { slug: "coins-demo" },
     update: {},
-    create: { slug: "coins", name: "Coins workspace", description: "Buy Ziks, fund an issue and get paid." },
+    create: { slug: "coins-demo", name: "Coins workspace", description: "Buy Ziks, fund an issue and get paid." },
   });
   for (const account of ACCOUNTS) {
     await prisma.membership.upsert({
@@ -73,7 +73,7 @@ async function main() {
   console.log("\nZiki Coins accounts\n");
   for (const account of ACCOUNTS) console.log(`  ${account.key.padEnd(6)} ${account.email}`);
   console.log(`\n  password: ${PASSWORD}`);
-  console.log(`\n  workspace: coins / project: checkout / issue #${bug.number}: ${title}`);
+  console.log(`\n  workspace: coins-demo / project: checkout / issue #${bug.number}: ${title}`);
   console.log(`  issue id: ${bug.id}  (pnpm db:coins:go-live ${bug.id} resolves it and pays it out)\n`);
 }
 

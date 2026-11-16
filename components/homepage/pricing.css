@@ -1,0 +1,78 @@
+/* The pricing page (#ziki-coins). Uses the homepage's colour variables, so it follows light and dark mode with the rest. */
+
+.ziki-homepage .pricing-section { padding-bottom: 70px; }
+.ziki-homepage .pr-grid { align-items: stretch; display: grid; gap: 18px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.ziki-homepage .pr-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 26px 28px;
+  position: relative;
+}
+.ziki-homepage .pr-featured { border-color: var(--green); box-shadow: var(--shadow); }
+.ziki-homepage .pr-current { border-color: var(--green); background: var(--green-soft); }
+.ziki-homepage .pr-card h3 { font-size: 19px; font-weight: 600; letter-spacing: -.02em; margin: 0; }
+
+.ziki-homepage .pr-tag {
+  background: var(--green);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  left: 26px;
+  letter-spacing: .04em;
+  padding: 5px 11px;
+  position: absolute;
+  text-transform: uppercase;
+  top: -13px;
+}
+
+.ziki-homepage .pr-price { align-items: baseline; display: flex; gap: 8px; margin: 18px 0 0; }
+.ziki-homepage .pr-price b { font-size: 46px; font-weight: 500; letter-spacing: -.05em; line-height: 1; }
+.ziki-homepage .pr-price span { color: var(--muted); font-size: 14px; }
+.ziki-homepage .pr-offer { color: var(--green); font-size: 16px; font-weight: 700; line-height: 1.35; margin: 14px 0 0; }
+
+.ziki-homepage .pr-points { display: flex; flex-direction: column; flex: 1; gap: 12px; list-style: none; margin: 24px 0 28px; padding: 24px 0 0; border-top: 1px solid var(--line); }
+.ziki-homepage .pr-points li { color: var(--muted); font-size: 14px; line-height: 1.5; padding-left: 26px; position: relative; }
+.ziki-homepage .pr-points li::before { color: var(--green); content: '✓'; font-weight: 700; left: 0; position: absolute; }
+
+.ziki-homepage .pr-action { align-items: stretch; display: flex; flex-direction: column; gap: 10px; }
+.ziki-homepage .pr-action form { display: flex; flex-direction: column; }
+.ziki-homepage .pr-action .button { cursor: pointer; width: 100%; }
+.ziki-homepage .pr-action .button:disabled { cursor: not-allowed; opacity: .6; transform: none; }
+.ziki-homepage .pr-badge { background: var(--green-soft); border: 1px solid var(--green); border-radius: 999px; color: var(--green); font-size: 14px; font-weight: 700; padding: 14px 21px; text-align: center; }
+.ziki-homepage .pr-link { color: var(--muted); font-size: 13px; font-weight: 600; text-align: center; text-decoration: underline; }
+
+.ziki-homepage .pr-note { color: var(--muted); font-size: 14px; margin: 26px 0 0; text-align: center; }
+.ziki-homepage .pr-error { background: #fff4e5; border: 1px solid #f2c88b; border-radius: 14px; color: #8a4b00; font-size: 14px; font-weight: 600; margin: 0 auto 28px; max-width: 720px; padding: 14px 18px; text-align: center; }
+:root[data-theme='dark'] .ziki-homepage .pr-error { background: #3a2a10; border-color: #7a5a22; color: #ffd596; }
+
+.ziki-homepage .pr-compare { padding-top: 70px; padding-bottom: 70px; }
+.ziki-homepage .pr-table-wrap { margin: 0 auto; max-width: 860px; overflow-x: auto; }
+.ziki-homepage .pr-table { border-collapse: collapse; width: 100%; }
+.ziki-homepage .pr-table th, .ziki-homepage .pr-table td { border-bottom: 1px solid var(--line); font-size: 15px; padding: 16px 14px; text-align: right; white-space: nowrap; }
+.ziki-homepage .pr-table thead th { color: var(--muted); font-size: 13px; font-weight: 600; }
+.ziki-homepage .pr-table thead small { color: var(--green); display: block; font-size: 12px; font-weight: 700; }
+.ziki-homepage .pr-table th:first-child, .ziki-homepage .pr-table td:first-child { text-align: left; }
+.ziki-homepage .pr-table tbody th { font-weight: 600; }
+.ziki-homepage .pr-table td { font-variant-numeric: tabular-nums; }
+
+.ziki-homepage .pr-faq { padding-top: 70px; padding-bottom: 40px; }
+.ziki-homepage .pr-faq-list { margin: 0 auto; max-width: 760px; }
+.ziki-homepage .pr-faq-list details { border-bottom: 1px solid var(--line); padding: 4px 0; }
+.ziki-homepage .pr-faq-list summary { cursor: pointer; font-size: 17px; font-weight: 600; list-style: none; padding: 18px 34px 18px 0; position: relative; }
+.ziki-homepage .pr-faq-list summary::-webkit-details-marker { display: none; }
+.ziki-homepage .pr-faq-list summary::after { color: var(--muted); content: '+'; font-size: 22px; font-weight: 400; position: absolute; right: 4px; top: 12px; }
+.ziki-homepage .pr-faq-list details[open] summary::after { content: '−'; }
+.ziki-homepage .pr-faq-list p { color: var(--muted); font-size: 15px; line-height: 1.65; margin: 0 0 20px; max-width: 680px; }
+
+@media (max-width: 1040px) {
+  .ziki-homepage .pr-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 28px; }
+}
+@media (max-width: 620px) {
+  .ziki-homepage .pr-grid { grid-template-columns: minmax(0, 1fr); }
+  .ziki-homepage .pricing-section, .ziki-homepage .pr-compare, .ziki-homepage .pr-faq { padding-left: 18px; padding-right: 18px; }
+}
